@@ -1,18 +1,65 @@
-import { StyleSheet, Text } from "react-native";
-import { View } from "react-native-reanimated/lib/typescript/Animated";
+import { useState } from "react";
+import { StyleSheet, View, Text, TextInput, Pressable, FlatList } from "react-native";
 
-export const HomeScreen = () => {
+export default function HomeScreen() {
+  const [text, setText] = useState("");
+  const [notes, setNotes] = useState<string[]>([]);
+
+  const onAddNote = () => {
+    setNotes(currentNotes => [text, ...currentNotes]);
+    setText("");
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Home Screen</Text>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Add note here"
+          value={text}
+          onChangeText={setText}
+        />
+        <Pressable style={styles.button} onPress={onAddNote}>
+          <Text style={{ color: 'white' }}>Add</Text>
+        </Pressable>
+      </View>
+      <FlatList
+        style={styles.noteList}
+        data={notes}
+        renderItem={({ item }) => <Text>{item}</Text>}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#0a7ea4',
+    padding: 8,
+    borderRadius: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 60,
+  },
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop: 16,
+    paddingHorizontal: 16
   },
+  inputContainer: {
+    flexDirection: 'row',
+    marginTop: 16,
+    gap: 4
+  },
+  noteList: {
+    marginTop: 16,
+    width: '100%'
+  },
+  textInput: {
+    borderWidth: 1,
+    padding: 8,
+    flex: 1,
+    borderRadius: 4,
+  }
 });
