@@ -10,6 +10,7 @@
   },
   "android": {
     "modules": [
+      "expo.modules.socket.ServerSocketModule",
       "expo.modules.socket.SocketModule"
     ]
   }

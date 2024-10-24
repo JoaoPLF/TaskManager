@@ -1,16 +1,15 @@
 package expo.modules.socket
 
+import expo.modules.kotlin.Promise
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.PrintWriter
+import java.net.Socket
 
 class SocketModule : Module() {
-  // Each module class must implement the definition function. The definition consists of components
-  // that describes the module's functionality and behavior.
-  // See https://docs.expo.dev/modules/module-api for more details about available components.
   override fun definition() = ModuleDefinition {
-    // Sets the name of the module that JavaScript code will use to refer to the module. Takes a string as an argument.
-    // Can be inferred from module's class name, but it's recommended to set it explicitly for clarity.
-    // The module will be accessible from `requireNativeModule('Socket')` in JavaScript.
     Name("Socket")
 
     // Sets constant properties on the module. Can take a dictionary or a closure that returns a dictionary.
@@ -33,6 +32,29 @@ class SocketModule : Module() {
       sendEvent("onChange", mapOf(
         "value" to value
       ))
+    }
+
+    AsyncFunction("startClient") { promise: Promise ->
+      try {
+        println("SOCKET - Connecting to server")
+
+        val socket = Socket("10.0.2.2", 3000)
+        val output = PrintWriter(socket.getOutputStream(), true)
+        val input = BufferedReader(InputStreamReader(socket.getInputStream()))
+
+        println("SOCKET - Listening at ${socket.localSocketAddress}")
+
+        output.println("Hello")
+        val response = input.readLine()
+
+        println("SOCKET - Received $response")
+
+        input.close()
+        output.close()
+        socket.close()
+      } catch (e: Exception) {
+        promise.reject("SOCKET_EXCEPTION", "Could not create socket", e)
+      }
     }
   }
 }

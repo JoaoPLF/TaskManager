@@ -1,5 +1,6 @@
+import { startClient, startServer } from "@/modules/socket";
 import { useState } from "react";
-import { StyleSheet, View, Text, TextInput, Pressable, FlatList } from "react-native";
+import { StyleSheet, View, Text, TextInput, Pressable, FlatList, Button } from "react-native";
 
 export default function HomeScreen() {
   const [text, setText] = useState("");
@@ -12,6 +13,10 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={{ flexDirection: 'row', gap: 8 }}>
+        <Button title="Start Server" onPress={() => startServer()} />
+        <Button title="Start Client" onPress={() => startClient()} />
+      </View>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.textInput}
