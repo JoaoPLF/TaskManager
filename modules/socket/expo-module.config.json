@@ -1,0 +1,16 @@
+{
+  "platforms": [
+    "ios",
+    "android"
+  ],
+  "ios": {
+    "modules": [
+      "SocketModule"
+    ]
+  },
+  "android": {
+    "modules": [
+      "expo.modules.socket.SocketModule"
+    ]
+  }
+}
