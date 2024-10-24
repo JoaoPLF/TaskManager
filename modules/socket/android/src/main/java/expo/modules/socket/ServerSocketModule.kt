@@ -63,12 +63,13 @@ class ServerSocketModule : Module() {
                         val output = PrintWriter(clientSocket.getOutputStream(), true)
 
                         var message: String?
-                        while (input.readLine().also { message = it } != null) {
+                        while (input.readLine().also { message = it } != Constants.STOP_COMMUNICATION) {
                             println("SERVERSOCKET - Received $message")
                         }
 
                         println("SERVERSOCKET - Sending message")
                         output.println("Thank you")
+                        output.println(Constants.STOP_COMMUNICATION)
 
                         input.close()
                         output.close()

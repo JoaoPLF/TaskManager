@@ -61,9 +61,12 @@ class SocketModule : Module() {
         println("SOCKET - Sending message")
 
         output.println("Hello")
-        val response = input.readLine()
-
-        println("SOCKET - Received $response")
+        output.println(Constants.STOP_COMMUNICATION)
+        
+        var message: String?
+        while (input.readLine().also { message = it } != Constants.STOP_COMMUNICATION) {
+          println("SOCKET - Received $message")
+        }
 
         input.close()
         output.close()
