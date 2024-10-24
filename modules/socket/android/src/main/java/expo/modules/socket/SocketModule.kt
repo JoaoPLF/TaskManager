@@ -6,43 +6,59 @@ import expo.modules.kotlin.modules.ModuleDefinition
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.PrintWriter
+import java.net.DatagramPacket
+import java.net.DatagramSocket
+import java.net.InetAddress
 import java.net.Socket
 
 class SocketModule : Module() {
+  private var serverAddress: String? = null
+
   override fun definition() = ModuleDefinition {
     Name("Socket")
 
-    // Sets constant properties on the module. Can take a dictionary or a closure that returns a dictionary.
-    Constants(
-      "PI" to Math.PI
-    )
+    AsyncFunction("findServer") { promise: Promise ->
+      val socket = DatagramSocket(Constants.CLIENT_BROADCAST_PORT)
+      val broadcastAddress = InetAddress.getByName("255.255.255.255")
+      val serverDiscoveryMessage = Constants.SERVER_DISCOVERY_MESSAGE
 
-    // Defines event names that the module can send to JavaScript.
-    Events("onChange")
+      val packet = DatagramPacket(
+        serverDiscoveryMessage.toByteArray(),
+        serverDiscoveryMessage.length,
+        broadcastAddress,
+        Constants.SERVER_BROADCAST_PORT
+      )
+      socket.send(packet)
+      println("SOCKET - Finding server")
 
-    // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    Function("hello") {
-      "Hello world! 👋"
-    }
+      val buffer = ByteArray(1024)
+      val responsePacket = DatagramPacket(buffer, buffer.size)
 
-    // Defines a JavaScript function that always returns a Promise and whose native code
-    // is by default dispatched on the different thread than the JavaScript runtime runs on.
-    AsyncFunction("setValueAsync") { value: String ->
-      // Send an event to JavaScript.
-      sendEvent("onChange", mapOf(
-        "value" to value
-      ))
+      socket.receive(responsePacket)
+      val response = String(responsePacket.data, 0, responsePacket.length)
+      println("SOCKET - Server found, $response")
+
+      if (response != Constants.SERVER_NOT_FOUND_MESSAGE) {
+        serverAddress = response
+      }
+
+      socket.close()
+
+      promise.resolve()
     }
 
     AsyncFunction("startClient") { promise: Promise ->
       try {
-        println("SOCKET - Connecting to server")
+        if (serverAddress.isNullOrEmpty()) {
+          promise.reject("SERVER_UNAVAILABLE", "There is no server to connect to", Throwable())
+          return@AsyncFunction
+        }
 
-        val socket = Socket("10.0.2.2", 3000)
+        val socket = Socket(serverAddress, Constants.SERVER_SOCKET_PORT)
         val output = PrintWriter(socket.getOutputStream(), true)
         val input = BufferedReader(InputStreamReader(socket.getInputStream()))
 
-        println("SOCKET - Listening at ${socket.localSocketAddress}")
+        println("SOCKET - Sending message")
 
         output.println("Hello")
         val response = input.readLine()
@@ -52,6 +68,8 @@ class SocketModule : Module() {
         input.close()
         output.close()
         socket.close()
+
+        promise.resolve()
       } catch (e: Exception) {
         promise.reject("SOCKET_EXCEPTION", "Could not create socket", e)
       }

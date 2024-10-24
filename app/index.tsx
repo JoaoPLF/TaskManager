@@ -1,4 +1,4 @@
-import { startClient, startServer } from "@/modules/socket";
+import { findServer, startClient, startServer } from "@/modules/socket";
 import { useState } from "react";
 import { StyleSheet, View, Text, TextInput, Pressable, FlatList, Button } from "react-native";
 
@@ -11,11 +11,16 @@ export default function HomeScreen() {
     setText("");
   };
 
+  const startClientAsync = async () => {
+    await findServer();
+    await startClient();
+  }
+
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: 'row', gap: 8 }}>
         <Button title="Start Server" onPress={() => startServer()} />
-        <Button title="Start Client" onPress={() => startClient()} />
+        <Button title="Start Client" onPress={() => startClientAsync()} />
       </View>
       <View style={styles.inputContainer}>
         <TextInput

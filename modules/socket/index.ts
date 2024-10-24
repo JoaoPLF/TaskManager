@@ -6,13 +6,6 @@ import ServerSocketModule from './src/ServerSocketModule';
 import SocketModule from './src/SocketModule';
 import { ChangeEventPayload } from './src/Socket.types';
 
-// Get the native constant value.
-export const PI = SocketModule.PI;
-
-export function hello(): string {
-  return SocketModule.hello();
-}
-
 export async function setValueAsync(value: string) {
   return await SocketModule.setValueAsync(value);
 }
@@ -25,6 +18,10 @@ export function addChangeListener(listener: (event: ChangeEventPayload) => void)
 
 export async function startServer() {
   return await ServerSocketModule.startServer();
+}
+
+export async function findServer() {
+  return await SocketModule.findServer();
 }
 
 export async function startClient() {
