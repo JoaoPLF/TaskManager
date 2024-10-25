@@ -1,50 +1,17 @@
-# Welcome to your Expo app 👋
+# Task Manager (WIP)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Inspired by [Skylight Calendar](https://www.skylightframe.com/calendar/) and its unavailability outside of NA and EU, I decided to build my own version of it.
 
-## Get started
+### The plan so far
 
-1. Install dependencies
+The idea for this first prototype is to build a server-client system using sockets. Both client and server work in the same way, having the same functionalities when it comes to adding events, tasks, notes. Clients are independent and should be 100% usable offline, while the server will act as the source of truth - clients can sync to it so updates can be shared between devices.
 
-   ```bash
-   npm install
-   ```
+After this first part is done, I'll explore building a custom android rom that automatically runs the app on boot. And finally, I'll hopefully have the resources to develop the iOS app.
 
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- [X] Server/client socket communication
+- [ ] Store data in SQLite
+- [ ] Send data between devices
+- [ ] Conflict resolution
+- [ ] Add calendar and To-Dos
+- [ ] Buy tablet/touchscreen computer and develop custom android rom
+- [ ] Buy a macbook, an iPhone and develop the iOS native modules
